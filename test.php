@@ -11,6 +11,16 @@ function fib($n) {
 	}
 }
 
+function findMax($arr) {
+	$max = False;
+	foreach ($arr as $val) {
+		if ($val > $max) {
+			$max = $val;
+		}
+	}
+	return $max;
+}
+
 function iterativeFib($n) {
 	$x = 0;
 	$y = 1;

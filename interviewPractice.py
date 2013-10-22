@@ -1,5 +1,6 @@
 from copy import deepcopy
 from Queue import PriorityQueue
+from Queue import Queue
 '''
 Sorting Algorithms
 '''
@@ -268,5 +269,254 @@ def merge2(arr1, arr2):
 print removeEverySecond([1, 2, 3, 4, 5, 6, 7, 8])
 
 print mergeSort2([1, 3, 4, 2, 1, 8, 9, 10, 2, 3])
+
+#Node has val, children (ordered left to right)
+def depthfirst(node, toFind):
+	toCheck = [node]
+	while toCheck:
+		currentNode = toCheck.pop()
+		if currentNode.value == toFind:
+			return True
+		else:
+			toCheck.append(children.reverse())
+	return False
+
+def breadthfirst(node, toFind):
+	toCheck = Queue()
+	toCheck.put(node)
+	while not toCheck.empty():
+		currentNode = toCheck.get()
+		if currentNode.value == toFind:
+			return True
+		else:
+			for child in currentNode.children:
+				toCheck.put(child)
+	return False
+
+def largestIncreasingSubsequence(arr):
+	largestSoFar = []
+	currentSequence = []
+	lastItem = None
+	for num in arr:
+		if num >= lastItem:
+			currentSequence.append(num)
+		else:
+			if len(currentSequence) > len(largestSoFar):
+				largestSoFar = currentSequence
+			currentSequence = [num]
+		lastItem = num
+	if len(currentSequence) > len(largestSoFar):
+		largestSoFar = currentSequence
+	return largestSoFar
+
+print largestIncreasingSubsequence([1,2,3,4,-1, -2, 3, 4, 5, 6, 7])
+
+#return all sets of primes such that p * q <= n
+def multPrimes(n):
+	p = 1
+	q = 2
+	sets = []
+	if n < 2:
+		return None
+	while p*q <= n:
+		sets.append((p, q))
+		p = q
+		q += 1
+		while not isPrime(q):
+			q += 1
+	return sets
+
+def isPrime(n):
+    for i in range(2,int(n**0.5)+1):
+        if n%i==0:
+            return False
+    return True
+
+def primesBefore(n):
+	primes = []
+	for i in range(n):
+		if isPrime(i):
+			primes.append(i)
+	return primes
+
+print multPrimes(10000)
+
+print primesBefore(1000)
+
+def isPermutation(a, b):
+	for character in a:
+		if character in b:
+			b = stringRemoveFirst(character, b)
+		else:
+		    return False
+	if not b:
+		return True
+	return False
+
+def stringRemoveFirst(letter, string):
+	str1 = ''
+	letterRemoved = False
+	for character in string:
+		if letter == character and not letterRemoved:
+			letterRemoved = True
+		else:
+			str1 += character
+	return str1
+
+
+print isPermutation('cat', 'tac')
+
+print isPermutation('cat', 'catch')
+
+
+def returnDuplicates(arr):
+	seensofar = []
+	duplicates = []
+	for num in arr:
+		if num in seensofar:
+			duplicates.append(num)
+		else:
+			seensofar.append(num)
+	return duplicates
+
+print returnDuplicates([1, 2, 3, 4, 1, 2, 4, 6])
+
+def mergesort3(arr):
+	if len(arr) == 1:
+		return arr
+	return merge3(mergesort3(arr[:len(arr)/2]), mergesort3(arr[len(arr)/2:]))
+
+def merge3(a, b):
+	merged = []
+	while a and b:
+		if a[0] <= b[0]:
+			merged.append(a[0])
+			a.remove(a[0])
+		else:
+			merged.append(b[0])
+			b.remove(b[0])
+	return merged + a + b
+
+print mergesort3([1, 2, 3, 4, 2, 3, 7, 4, 5,6,8])
+
+def leapfrog(arr, startIndex, endIndex):
+	indexesSeen = []
+	currentIndex = startIndex
+	while True:
+		nextIndex = currentIndex + arr[currentIndex]
+		if nextIndex > len(arr) or nextIndex < 0:
+			return False
+		elif nextIndex == endIndex:
+			return True
+		elif nextIndex in indexesSeen:
+			return False
+		else:
+			indexesSeen.append(currentIndex)
+			currentIndex = nextIndex
+
+print leapfrog([1, 2, -1, 3], 0, 3)
+
+print leapfrog([1, 2, -1, 3], 2, 3)
+
+print leapfrog([1, 2, -1, 3], 3, 3)
+
+def findLargerThan(bst, val):
+	currentNode = bst.root
+	while True:
+		if currentNode.value > val:
+			return currentNode.value
+		else:
+			if currentNode.right:
+				currentNode = currentNode.right
+			else:
+				return False
+ 
+def reverseArray(arr):
+	for i in range(len(arr) / 2):
+		temp = arr[i]
+		arr[i] = arr[len(arr) - (i + 1)]
+		arr[len(arr) - (i + 1)] = temp
+	return arr
+
+def reverseArrayNonDestructive(arr):
+	toReturn = []
+	for item in arr:
+		toReturn = [item] + toReturn
+	return toReturn
+
+print reverseArray([1, 2, 3, 4, 5])
+
+print reverseArrayNonDestructive([1, 2, 3, 4])
+
+class Stack:
+	mins = []
+	stack = []
+
+	def getMin(self):
+		return self.mins[-1]
+
+	def push(self, item):
+		self.stack.append(item)
+		if len(self.mins) == 0 or item <= self.mins[-1]:
+			self.mins.append(item)
+
+	def pop(self):
+		val = self.stack.pop()
+		if val == self.mins[-1]:
+			self.mins.pop()
+		return val
+
+testStack = Stack()
+
+testStack.push(2)
+testStack.push(3)
+testStack.push(1)
+
+print testStack.mins
+print testStack.stack
+print testStack.getMin()
+print testStack.pop()
+print testStack.getMin()
+
+# Selects a pivot, splits all values below and above that value
+# recursively does the same on both halves
+def quickSort(arr):
+	if len(arr) <= 1:
+		return arr
+	pivot = len(arr) / 2
+	pivotValue = arr[pivot]
+	left = []
+	right = []
+	for i in range(len(arr)):
+		if i != pivot:
+			if arr[i] <= pivotValue:
+				left.append(arr[i])
+			else:
+				right.append(arr[i])
+	return quickSort(left) + [pivotValue] + quickSort(right)
+
+print quickSort([1, 5, 4, 2, 3, 7, 8, 4, 2, 1])
+
+def bubbleSort2(arr):
+	noChange = False
+	while not noChange:
+		noChange = True
+		for i in range(len(arr)-1):
+			if arr[i] > arr[i+1]:
+				temp = arr[i+1]
+				arr[i+1] = arr[i]
+				arr[i] = temp
+				noChange = False
+	return arr
+
+print bubbleSort2([1, 5, 4, 2, 3, 7, 8, 4, 2, 1])
+
+def findMax(arr):
+	max = None
+	for item in arr:
+		if item > max:
+			max = item
+	return max
+
 
 
