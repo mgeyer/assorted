@@ -97,7 +97,7 @@ class flickr_api:
 
 		for photo in photos:
 			timestamp = datetime.datetime.strptime(photo['datetaken'], '%Y-%m-%d %H:%M:%S')
-			date = datetime.datetime.strftime(timestamp, '%Y-%d-%m')
+			date = datetime.datetime.strftime(timestamp, '%Y-%m-%d')
 			if self.args.tags:
 				self.results[date] = self.results.get(date, {})
 				for tag in photo['tags'].split(' '):
@@ -110,16 +110,15 @@ class flickr_api:
 	Prints in a sorted fashion the final results
 	"""
 	def printResults(self):
-		sorted_result = []
 		if self.args.tags:
 			for key in sorted(self.results.iterkeys()):
-				sorted_result[key] = {}
+				print key
 				for tag in sorted(self.results[key].iterkeys()):
-					sorted_result[key][tag] = self.results[key][tag]
+					print "    %s : %s" % (tag, self.results[key][tag])
 		else:
 			for key in sorted(self.results.iterkeys()):
+				print "%s : %s" % (key, self.results[key])
 				sorted_result = (key, self.results[key])
-		print sorted_result
 
 
 flickr_api()
